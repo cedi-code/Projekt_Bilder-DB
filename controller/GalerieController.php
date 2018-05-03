@@ -5,12 +5,12 @@
  * Date: 26.04.2018
  * Time: 11:07
  */
-
+require_once '../repository/GallerieRepository.php';
 class GalerieController
 {
     public function index() {
         $wrong = null;
-
+        $gallerieRepository = new GallerieRepository();
         if(isset($_SESSION['uid'])) {
             if(isset($_POST['sendGalerie'])) {
                 $gName = $_POST['name'];
@@ -18,8 +18,15 @@ class GalerieController
                 if(empty($gName) || empty($gDescripttion)) {
                     $wrong = "Felder sind leer!";
                 }else {
+                    if($gallerieRepository->checkName($gName, $_SESSION['uid']) < 1){
 
-                    header("Location: " . $GLOBALS['appurl'] ."/benutzer");
+                        $gallerieRepository->addUser($gName,$gDescripttion, $_SESSION['uid']);
+                        header("Location: " . $GLOBALS['appurl'] ."/benutzer");
+
+                    } else {
+                        $wrong = "Galerie Name ist bereits vorhanden!";
+                    }
+
                 }
             }
 
