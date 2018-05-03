@@ -1,0 +1,15 @@
+body {
+  padding-top: 50px;
+}
+ul {
+  float: left;
+}
+li {
+  list-style: none;
+}
+.errMsg {
+  color: red;
+}
+.succMsg {
+  color:greenyellow;
+}
