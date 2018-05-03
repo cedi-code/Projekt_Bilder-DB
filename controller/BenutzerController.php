@@ -20,4 +20,16 @@ class BenutzerController
 
 
     }
+    public function edit() {
+        if(isset($_SESSION['uid'])) {
+            $view = new View('user_edit');
+            $view->title = 'Bilder-DB';
+            $view->heading = $_SESSION['uname'];
+            $view->display();
+        }else {
+            header("Location: " . $GLOBALS['appurl'] ."/login");
+        }
+
+
+    }
 }
