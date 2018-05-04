@@ -1,11 +1,11 @@
 <?php
+require_once '../repository/BenutzerRepository.php';
 /**
  * Created by PhpStorm.
  * User: vmadmin
  * Date: 26.04.2018
  * Time: 10:40
  */
-
 class BenutzerController
 {
     public function index() {
@@ -51,7 +51,7 @@ class BenutzerController
             $passwort = $_POST['passwort'];
             $v_passwort = $_POST['v_passwort'];
             if(empty($nickname) || empty($email) || empty($passwort) || empty($v_passwort)) {
-                $errorMsg = $loginRepository->errMsg("empty");
+                //$errorMsg = $BenutzerRepository->errMsg("empty");
 
 
             }else {
@@ -59,9 +59,9 @@ class BenutzerController
                     if(!$loginRepository->checkMail($email) > 0 && filter_var($email, FILTER_VALIDATE_EMAIL)) {
                         if(preg_match($passwortPattern, $passwort) === 1){
                             if($passwort == $v_passwort) {
-                                $loginRepository->addUser($nickname,$email,$passwort);
+                                $loginRepository->updateUser($nickname,$email,$passwort);
                                 $_SESSION["succMsg"] = $loginRepository->errMsg("succ");
-                                header("Location: ". $GLOBALS['appurl'] ."/login");
+                                header("Location: ". $GLOBALS['appurl'] ."/user");
                             }else {
                                 $errorMsg = $loginRepository->errMsg("vpasswort"); // nicht gleiches Passwort
                             }
@@ -84,7 +84,7 @@ class BenutzerController
 
 
 
-      $view = new View('login_registration');
+      $view = new View('user_edit');
       $view->title = 'Bilder-DB';
       $view->heading = 'Registration';
       $view->error = $errorMsg;
