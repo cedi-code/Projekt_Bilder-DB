@@ -13,3 +13,6 @@ li {
 .succMsg {
   color:greenyellow;
 }
+img {
+  max-width: 10%;
+}

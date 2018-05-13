@@ -1,5 +1,6 @@
 <?php
 require_once '../repository/BenutzerRepository.php';
+require_once '../repository/GallerieRepository.php';
 /**
  * Created by PhpStorm.
  * User: vmadmin
@@ -10,9 +11,11 @@ class BenutzerController
 {
     public function index() {
         if(isset($_SESSION['uid'])) {
+            $gallerieRepository = new GallerieRepository();
             $view = new View('user_index');
             $view->title = 'Bilder-DB';
             $view->heading = $_SESSION['uname'];
+            $view->galleries = $gallerieRepository->getGalleries($_SESSION['uid']);
             $view->display();
         }else {
             header("Location: " . $GLOBALS['appurl'] ."/login");

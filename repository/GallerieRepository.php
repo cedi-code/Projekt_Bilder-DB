@@ -12,12 +12,8 @@ class GallerieRepository
     protected $tableId = 'id';
     protected $order = 'gname,  path, beschreibung, uid';
 
-    public function addUser( $name,$beschreibung, $uid) {
-        $path = $uid . "/" . $name ;
+    public function addGallerie( $name,$beschreibung, $uid,$path) {
 
-        if (!file_exists($path)) {
-            mkdir($path, 0777, true);
-        }
         $query = "INSERT INTO $this->tableName ( gname,  path, beschreibung, uid) VALUES (?,?,?,?)";
         $statement = ConnectionHandler::getConnection()->prepare($query);
 
@@ -29,6 +25,12 @@ class GallerieRepository
 
         $statement->close();
     }
+    // TODO add in DATABASE!
+    public function addImage($name,$dscr,$inputname,$uid,$gallerieName) {
+
+
+    }
+
     public function checkName($name, $uid) {
         $query = "SELECT * FROM $this->tableName WHERE uid = ? AND gname = ? ";
         $statement = ConnectionHandler::getConnection()->prepare($query);
@@ -58,10 +60,65 @@ class GallerieRepository
         }
 
 
-        // zählen wie viele rows man hat!!!!!!!!!!!¨¨
-        $rows = $result->fetch_object();
+        $rows = [];
+        while($row = $result->fetch_object()){
+            array_push($rows,$row);
+        }
+
         $statement->close();
         return $rows;
     }
+
+
+    function upload($name,$uid,$gallerieName) {
+        $File = $_FILES[$name];
+
+        $FileName = $_FILES[$name]['name'];
+        $FileTmpName = $_FILES[$name]['tmp_name'];
+        $FileSize = $_FILES[$name]['size'];
+        $FileError = $_FILES[$name]['error'];
+        $FileType = $_FILES[$name]['type'];
+
+
+        $FileExt = explode('.', $FileName);
+        $FileActualExt = strtolower(end($FileExt));
+
+        if($FileActualExt === 'png' || $FileActualExt === 'jpg') {
+            if($FileError === 0) {
+                if($FileSize < 1000000) {
+                    if($name == 'galleriePic') {
+                        $FileUper = strtoupper($FileActualExt);
+                        $fileName = 'profile.'.$FileUper;
+                    }else {
+                        // Hier wird der Name gemacht der Datei (timestamp)
+                        $FileUper = strtoupper($FileActualExt);
+                        $date = new DateTime();
+                        $timestamp = $date->getTimestamp();
+                        $fileName =  $timestamp . '.' . $FileUper;
+                    }
+
+                    $fileDestination = $uid.'/'.$gallerieName.'/'.$fileName;
+                    move_uploaded_file($FileTmpName, $fileDestination);
+                }else {
+                    echo "<pre>";
+
+                    echo 'size';
+                    var_dump($_FILES[$name]);die;
+                }
+            }else {
+                echo "<pre>";
+                echo 'err';
+                var_dump($_FILES[$name]);die;
+            }
+        }else {
+            echo "<pre>";
+
+            echo 'type';
+            var_dump($_FILES[$name]);die;
+        }
+
+    }
+
+
 
 }

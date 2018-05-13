@@ -14,3 +14,9 @@
     echo $button->label('Benutzerdaten ändern')->name('change')->type('link')->class('btn-success')->link("/benutzer/doEdit");
 
     echo "<h2>Galerien:</h2>";
+    for($i = 0; $i < sizeof($galleries);$i++){
+
+        echo "<img src='" . $galleries[$i]->path . "/profile.JPG'/>";
+        echo "<h4>" . $galleries[$i]->gname . "</h4>";
+
+    }

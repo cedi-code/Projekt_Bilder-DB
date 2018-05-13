@@ -12,6 +12,7 @@ $btnClass = "btn btn-success";
 $form = new Form($GLOBALS['appurl']."/galerie");
 $button = new ButtonBuilder();
 echo $form->input()->label('Galerie Name:')->name('name')->type('text')->lblClass($lblClass)->eltClass($eltClass);
+echo $form->input()->label('Galerie ProfilePicture:')->name('galleriePic')->type('file')->lblClass($lblClass)->eltClass($eltClass);
 echo $form->input()->label('Beschreibung')->name('description')->type('text')->lblClass($lblClass)->eltClass($eltClass);
 // echo $form->select()->label('Public')->name('isPublic')
 echo $button->start($lblClass, $eltClass);
