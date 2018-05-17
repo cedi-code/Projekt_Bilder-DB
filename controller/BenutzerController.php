@@ -51,8 +51,6 @@ class BenutzerController
         if(isset($_POST['sendE'])) {
             $nickname = $_POST['nickname'];
             $email = $_POST['email'];
-            $passwort = $_POST['passwort'];
-            $v_passwort = $_POST['v_passwort'];
             if(empty($nickname) || empty($email) || empty($passwort) || empty($v_passwort)) {
                 //$errorMsg = $BenutzerRepository->errMsg("empty");
 
@@ -60,17 +58,11 @@ class BenutzerController
             }else {
                 if(strlen($nickname) < 50 || strlen($nickname) > 3) {
                     if(!$loginRepository->checkMail($email) > 0 && filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                        if(preg_match($passwortPattern, $passwort) === 1){
-                            if($passwort == $v_passwort) {
-                                $loginRepository->updateUser($nickname,$email,$passwort);
-                                $_SESSION["succMsg"] = $loginRepository->errMsg("succ");
+
+                                $loginRepository->updateUser($nickname,$email);
+                                $_SESSION["succMsg"] = $benutzerRepository->errMsg("succ");
                                 header("Location: ". $GLOBALS['appurl'] ."/user");
-                            }else {
-                                $errorMsg = $loginRepository->errMsg("vpasswort"); // nicht gleiches Passwort
-                            }
-                        }else {
-                            $errorMsg = $loginRepository->errMsg("bpasswort"); // schlechtes Passwort mind. 1Kleinbuchstaben, 1Grossbuchstaben, 1Zahl, 1Sonderzeichen und 5lang sein
-                        }
+
 
                     }else {
                         $errorMsg = $loginRepository->errMsg("mailInvalid"); // mail gibt es schon oder ist ungültig
@@ -89,7 +81,7 @@ class BenutzerController
 
       $view = new View('user_edit');
       $view->title = 'Bilder-DB';
-      $view->heading = 'Registration';
+      $view->heading = 'Benutzerdaten bearbeiten';
       $view->error = $errorMsg;
       $view->mail = $email;
       $view->usr = $nickname;
