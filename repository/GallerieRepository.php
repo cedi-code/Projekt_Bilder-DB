@@ -6,7 +6,7 @@
  * Time: 10:26
  */
 require_once '../lib/Repository.php';
-class GallerieRepository
+class GallerieRepository extends Repository
 {
     protected $tableName = 'galerie';
     protected $tableId = 'id';
@@ -68,6 +68,7 @@ class GallerieRepository
         $statement->close();
         return $rows;
     }
+
 
 
     function upload($name,$uid,$gallerieName) {

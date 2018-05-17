@@ -44,7 +44,17 @@ class GalerieController
             header("Location: " . $GLOBALS['appurl'] ."/login");
         }
 
+    }
+    public function show($id) {
 
+        $gallerieRepository = new GallerieRepository();
+        $galerrieInfo = $gallerieRepository->readById($id);
+
+        $view = new View('galerie_show');
+        $view->title = 'Galerie ' .$galerrieInfo->gname;
+        $view->heading = 'Galerie ' .$galerrieInfo->gname;
+        $view->beschreibung = $galerrieInfo->beschreibung;
+        $view->display();
     }
     function makePath($uid, $name) {
         $path = $uid . "/" . $name ;

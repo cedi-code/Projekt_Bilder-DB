@@ -51,16 +51,30 @@
         $method = $uriFragments[1];
       }
 
+
+
       $args = array_slice($uriFragments, 2);
+
+      $id = '';
+      if(!empty($uriFragments[2])) {
+          $id = $uriFragments[2];
+      }
 
       // Den gewünschten Controller laden
       //   Achtung! Hier stützt PHP ab, sollte der Controller nicht existieren
       require_once "../controller/$controllerName.php";
 
+
       // Eine neue Instanz des Controllers wird erstellt und die gewünschte
       //   Methode darauf aufgerufen.
       $controller = new $controllerName();
-      $controller->$method();
+
+      if( strlen($id) > 0) {
+          $controller->$method($id);
+      }else {
+          $controller->$method();
+      }
+
     }
 }
 ?>
