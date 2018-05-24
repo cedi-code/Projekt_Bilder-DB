@@ -6,6 +6,7 @@
  * Time: 11:07
  */
 require_once '../repository/GallerieRepository.php';
+require_once '../repository/BildRepository.php';
 class GalerieController
 {
     public function index() {
@@ -21,7 +22,7 @@ class GalerieController
                     if($gallerieRepository->checkName($gName, $_SESSION['uid']) < 1){
                         $path = $this->makePath($_SESSION['uid'],$gName);
 
-                        $gallerieRepository->upload('galleriePic',$_SESSION['uid'],$gName);
+                        // $gallerieRepository->upload('galleriePic',$_SESSION['uid'],$gName);
 
                         $gallerieRepository->addGallerie($gName,$gDescripttion, $_SESSION['uid'],$path);
 
@@ -48,13 +49,22 @@ class GalerieController
     public function show($id) {
 
         $gallerieRepository = new GallerieRepository();
+        $bildRepository = new BildRepository();
         $galerrieInfo = $gallerieRepository->readById($id);
-
+        $bildInfo = $bildRepository->getBilder($id);
         $view = new View('galerie_show');
         $view->title = 'Galerie ' .$galerrieInfo->gname;
         $view->heading = 'Galerie ' .$galerrieInfo->gname;
         $view->beschreibung = $galerrieInfo->beschreibung;
+        $view->path = $galerrieInfo->path;
+        $view->bilder = $bildInfo;
+        $view->id = $galerrieInfo->id;
         $view->display();
+    }
+    public function delete($id) {
+        $gal = new GallerieRepository();
+        $gal->deleteById($id);
+        header("Location: " . $GLOBALS['appurl'] ."/benutzer");
     }
     function makePath($uid, $name) {
         $path = $uid . "/" . $name ;

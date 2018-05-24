@@ -72,7 +72,7 @@
       if( strlen($id) > 0) {
           $controller->$method($id);
       }else {
-          $controller->$method();
+          $controller->$method(null);
       }
 
     }

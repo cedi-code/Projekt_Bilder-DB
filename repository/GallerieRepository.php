@@ -25,11 +25,7 @@ class GallerieRepository extends Repository
 
         $statement->close();
     }
-    // TODO add in DATABASE!
-    public function addImage($name,$dscr,$inputname,$uid,$gallerieName) {
 
-
-    }
 
     public function checkName($name, $uid) {
         $query = "SELECT * FROM $this->tableName WHERE uid = ? AND gname = ? ";
@@ -48,6 +44,9 @@ class GallerieRepository extends Repository
         $statement->close();
         return $rows;
     }
+
+
+
     public function getGalleries($uid) {
         $query = "SELECT * FROM $this->tableName WHERE uid = ?";
         $statement = ConnectionHandler::getConnection()->prepare($query);
@@ -71,54 +70,7 @@ class GallerieRepository extends Repository
 
 
 
-    function upload($name,$uid,$gallerieName) {
-        $File = $_FILES[$name];
 
-        $FileName = $_FILES[$name]['name'];
-        $FileTmpName = $_FILES[$name]['tmp_name'];
-        $FileSize = $_FILES[$name]['size'];
-        $FileError = $_FILES[$name]['error'];
-        $FileType = $_FILES[$name]['type'];
-
-
-        $FileExt = explode('.', $FileName);
-        $FileActualExt = strtolower(end($FileExt));
-
-        if($FileActualExt === 'png' || $FileActualExt === 'jpg') {
-            if($FileError === 0) {
-                if($FileSize < 1000000) {
-                    if($name == 'galleriePic') {
-                        $FileUper = strtoupper($FileActualExt);
-                        $fileName = 'profile.'.$FileUper;
-                    }else {
-                        // Hier wird der Name gemacht der Datei (timestamp)
-                        $FileUper = strtoupper($FileActualExt);
-                        $date = new DateTime();
-                        $timestamp = $date->getTimestamp();
-                        $fileName =  $timestamp . '.' . $FileUper;
-                    }
-
-                    $fileDestination = $uid.'/'.$gallerieName.'/'.$fileName;
-                    move_uploaded_file($FileTmpName, $fileDestination);
-                }else {
-                    echo "<pre>";
-
-                    echo 'size';
-                    var_dump($_FILES[$name]);die;
-                }
-            }else {
-                echo "<pre>";
-                echo 'err';
-                var_dump($_FILES[$name]);die;
-            }
-        }else {
-            echo "<pre>";
-
-            echo 'type';
-            var_dump($_FILES[$name]);die;
-        }
-
-    }
 
 
 
