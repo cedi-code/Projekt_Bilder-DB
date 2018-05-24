@@ -4,14 +4,15 @@ require_once '../lib/Repository.php';
 /**
  *
  */
+
 class BenutzerRepository extends Repository
 {
+  protected $tableName = 'user';
 
   public function updateUser( $nickname,$email) {
-      $passwd = password_hash($passwort,  PASSWORD_DEFAULT);
-      $query = "UPDATE $this->tableName SET `email`=?,`nickname`=? WHERE id = " .$_SESSION['uid'];
-      $statement = ConnectionHandler::getConnection()->prepare($query);
 
+      $query = "UPDATE $this->tableName SET email= ?,nickname= ? WHERE id = " .$_SESSION['uid'];
+      $statement = ConnectionHandler::getConnection()->prepare($query);
       $statement->bind_param("ss",$email,$nickname);
 
       if(!$statement->execute()) {
