@@ -1,5 +1,6 @@
 <?php
 require_once '../repository/BenutzerRepository.php';
+require_once '../repository/LoginRepository.php';
 require_once '../repository/GallerieRepository.php';
 /**
  * Created by PhpStorm.
@@ -42,8 +43,8 @@ class BenutzerController
     {
 
 
-        $loginRepository = new BenutzerRepository();
-        $passwortPattern = "((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%èüÜÈéöÖÉÄÀäà_\-?!'`^~\]\[£{}+*.°ç&()¢=]).{4,40})";
+        $benutzerRepository = new BenutzerRepository();
+        $loginRepository = new LoginRepository();
         $errorMsg = null;
         $email = null;
         $nickname = null;
@@ -51,17 +52,20 @@ class BenutzerController
         if(isset($_POST['sendE'])) {
             $nickname = $_POST['nickname'];
             $email = $_POST['email'];
-            if(empty($nickname) || empty($email) || empty($passwort) || empty($v_passwort)) {
-                //$errorMsg = $BenutzerRepository->errMsg("empty");
-
+            if(empty($nickname) || empty($email)) {
+                $errorMsg = $loginRepository->errMsg("empty");
+                 //printr("dfdasfssfas");
 
             }else {
                 if(strlen($nickname) < 50 || strlen($nickname) > 3) {
                     if(!$loginRepository->checkMail($email) > 0 && filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
-                                $loginRepository->updateUser($nickname,$email);
-                                $_SESSION["succMsg"] = $benutzerRepository->errMsg("succ");
-                                header("Location: ". $GLOBALS['appurl'] ."/user");
+                                $benutzerRepository->updateUser($nickname,$email);
+                                $_SESSION["succMsg"] = $loginRepository->errMsg("succ");
+                                $_SESSION['uname'] = $nickname;
+                                
+                                header("Location: ". $GLOBALS['appurl'] ."/benutzer");
+
 
 
                     }else {
