@@ -26,8 +26,21 @@ class GallerieRepository extends Repository
         $statement->close();
     }
 
+    public function updateGallerie($id, $newName, $newBeschreibung ) {
+        $query = "UPDATE $this->tableName SET gname= ?, beschreibung= ? WHERE uid = " .$id;
+        $statement = ConnectionHandler::getConnection()->prepare($query);
+        $statement->bind_param("ss",$newName,$newBeschreibung);
 
-    public function checkName($name, $uid) {
+        if(!$statement->execute()) {
+            throw new Exception($statement->error);
+        }
+
+        $statement->close();
+    }
+
+
+
+public function checkName($name, $uid) {
         $query = "SELECT * FROM $this->tableName WHERE uid = ? AND gname = ? ";
         $statement = ConnectionHandler::getConnection()->prepare($query);
         $statement->bind_param("is", $uid, $name);
@@ -44,7 +57,6 @@ class GallerieRepository extends Repository
         $statement->close();
         return $rows;
     }
-
 
 
     public function getGalleries($uid) {

@@ -8,6 +8,7 @@
 $button = new ButtonBuilder();
 echo $button->label('Bild hinzufügen')->name('bild Hinzufügen')->type('link')->class('btn-success')->link("/bild/edit/{$id}");
 echo $button->label('Gallerie Löschen')->name('Gallerie Löschen')->type('link')->class('btn-success')->link("/galerie/delete/{$id}");
+echo $button->label('Gallerie Bearbeiten')->name('Gallerie Bearbeiten')->type('link')->class('btn-success')->link("/galerie?n=" . $heading . "&d=\" . $beschreibung/{$id});
 echo "<br/>";
 echo $beschreibung;
 echo "<br/>";

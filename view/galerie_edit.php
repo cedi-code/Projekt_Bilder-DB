@@ -9,10 +9,12 @@ $lblClass = "col-md-2";
 $eltClass = "col-md-4";
 $btnClass = "btn btn-success";
 
+
+
 $form = new Form($GLOBALS['appurl']."/galerie");
 $button = new ButtonBuilder();
-echo $form->input()->label('Galerie Name:')->name('name')->type('text')->lblClass($lblClass)->eltClass($eltClass);
-echo $form->input()->label('Beschreibung')->name('description')->type('text')->lblClass($lblClass)->eltClass($eltClass);
+echo $form->input()->label('Galerie Name:')->name('name')->type('text')->lblClass($lblClass)->eltClass($eltClass)->value($name);
+echo $form->input()->label('Beschreibung')->name('description')->type('text')->lblClass($lblClass)->eltClass($eltClass)->value($descripttion);
 // echo $form->select()->label('Public')->name('isPublic')
 echo $button->start($lblClass, $eltClass);
 echo $button->label('Add')->name('sendGalerie')->type('submit')->class('btn-success');
