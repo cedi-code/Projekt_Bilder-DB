@@ -9,32 +9,33 @@ require_once '../repository/GallerieRepository.php';
 require_once '../repository/BildRepository.php';
 class GalerieController
 {
-    public function index($id) {
+    public function add($id) {
         $wrong = null;
-        $name = null;
-        $descripttion = null;
+        $daten = null;
+        $gName = null;
+        $gDescripttion = null;
         $gallerieRepository = new GallerieRepository();
-        if(isset($_GET['n'])) {
-            $name = $_GET['n'];
-        }
-        if(isset($_GET['d'])) {
-            $descripttion = $_GET['d'];
-        }
         if(isset($_SESSION['uid'])) {
+            if(isset($id)) {
+                $daten = $gallerieRepository->readById($id);
+                $gName = $daten->gname;
+                $gDescripttion = $daten->beschreibung;
+            }
             if(isset($_POST['sendGalerie'])) {
                 $gName = $_POST['name'];
                 $gDescripttion = $_POST['description'];
+
                 if(empty($gName) || empty($gDescripttion)) {
                     $wrong = "Felder sind leer!";
                 }else {
                     $name = $gName;
                     $descripttion = $gDescripttion;
-                    if($gallerieRepository->checkName($gName, $_SESSION['uid']) < 1){
+                    if($gallerieRepository->checkName($gName, $_SESSION['uid']) < 1 || $daten->gname == $gName ){
                         $path = $this->makePath($_SESSION['uid'],$gName);
 
                         // $gallerieRepository->upload('galleriePic',$_SESSION['uid'],$gName);
-                        if(isset($_GET['d']) || isset($_GET['n'])) {
-                            $gallerieRepository->updateGallerie($id,$name,$descripttion);
+                        if(isset($id)) {
+                            $gallerieRepository->updateGallerie($id,$gName,$gDescripttion);
                             header("Location: " . $GLOBALS['appurl'] ."/galerie/show/" . $id);
                         }else {
                             $gallerieRepository->addGallerie($gName,$gDescripttion, $_SESSION['uid'],$path);
@@ -53,10 +54,17 @@ class GalerieController
 
 
             $view = new View('galerie_edit');
-            $view->title = 'Galerie Hinzufügen';
-            $view->heading = 'Galerie Hinzufügen';
-            $view->name = $name;
-            $view->descripttion = $descripttion;
+            if(isset($id)) {
+                $view->title = 'Galerie Bearbeiten';
+                $view->heading = 'Galerie Bearbeiten';
+                $view->gid = $id;
+            }else {
+                $view->title = 'Galerie Hinzufügen';
+                $view->heading = 'Galerie Hinzufügen';
+            }
+
+            $view->name = $gName;
+            $view->descripttion = $gDescripttion;
             $view->err = $wrong;
             $view->display();
         }else {

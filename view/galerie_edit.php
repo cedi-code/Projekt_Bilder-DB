@@ -10,14 +10,20 @@ $eltClass = "col-md-4";
 $btnClass = "btn btn-success";
 
 
-
-$form = new Form($GLOBALS['appurl']."/galerie");
+if(isset($gid)) {
+    $form = new Form($GLOBALS['appurl']."/galerie/add/{$gid}");
+    echo $form->input()->name('gid')->type('hidden')->value($gid);
+}else {
+    $form = new Form($GLOBALS['appurl']."/galerie/add");
+}
 $button = new ButtonBuilder();
 echo $form->input()->label('Galerie Name:')->name('name')->type('text')->lblClass($lblClass)->eltClass($eltClass)->value($name);
 echo $form->input()->label('Beschreibung')->name('description')->type('text')->lblClass($lblClass)->eltClass($eltClass)->value($descripttion);
 // echo $form->select()->label('Public')->name('isPublic')
+
+
 echo $button->start($lblClass, $eltClass);
-echo $button->label('Add')->name('sendGalerie')->type('submit')->class('btn-success');
+echo $button->label('submit')->name('sendGalerie')->type('submit')->class('btn-success');
 echo $button->end();
 echo $form->end();
 if($err !== null ) {

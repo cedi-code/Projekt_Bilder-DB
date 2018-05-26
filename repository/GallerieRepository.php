@@ -27,10 +27,9 @@ class GallerieRepository extends Repository
     }
 
     public function updateGallerie($id, $newName, $newBeschreibung ) {
-        $query = "UPDATE $this->tableName SET gname= ?, beschreibung= ? WHERE uid = " .$id;
+        $query = "UPDATE $this->tableName SET gname= ?, beschreibung= ? WHERE id = " .$id;
         $statement = ConnectionHandler::getConnection()->prepare($query);
         $statement->bind_param("ss",$newName,$newBeschreibung);
-
         if(!$statement->execute()) {
             throw new Exception($statement->error);
         }

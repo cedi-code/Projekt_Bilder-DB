@@ -10,7 +10,7 @@
     $btnClass = "btn btn-success";
 
     $button = new ButtonBuilder();
-    echo $button->label('Galerie Hinzufügen')->name('bild')->type('link')->class('btn-success')->link("/galerie");
+    echo $button->label('Galerie Hinzufügen')->name('bild')->type('link')->class('btn-success')->link("/galerie/add");
     echo $button->label('Benutzerdaten ändern')->name('change')->type('link')->class('btn-success')->link("/benutzer/doEdit");
 
     echo "<h2>Galerien:</h2>";

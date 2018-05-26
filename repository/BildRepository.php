@@ -93,7 +93,10 @@ class BildRepository extends Repository
                     }
 
                     $fileDestination = $uid.'/'.$gallerieName.'/'.$fileName;
-                    move_uploaded_file($FileTmpName, $fileDestination);
+                    $fileDestinationPath = $uid.'/'.$gallerieName.'/';
+                    if(move_uploaded_file($FileTmpName, $fileDestination)) {
+                        $this->genThumb($fileDestination,$fileDestinationPath,$fileName,$FileActualExt);
+                    }
                     return $fileName;
                 }else {
                     echo "<pre>";
@@ -113,6 +116,26 @@ class BildRepository extends Repository
             var_dump($_FILES[$name]);die;
         }
 
+    }
+    function genThumb($fileDestination,$path,$fileName,$FileActualExt) {
+        list($width, $height) = getimagesize($fileDestination);
+        $r = $width / $height;
+        $factor = $width / $height;
+        $newheight = 150;
+        $newwidth = 150 * $factor;
+        if($FileActualExt == "png"){
+            $src = imagecreatefrompng($fileDestination);
+            $dst = imagecreatetruecolor($newwidth, $newheight);
+            imagecopyresampled($dst, $src, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
+
+            imagepng($dst, $path . "Thumbnail-" . $fileName);
+        }else{
+            $src = imagecreatefromjpeg($fileDestination);
+            $dst = imagecreatetruecolor($newwidth, $newheight);
+            imagecopyresampled($dst, $src, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
+
+            imagejpeg($dst, $path . "Thumbnail-" . $fileName);
+        }
     }
 
 }
