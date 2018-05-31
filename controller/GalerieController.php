@@ -16,6 +16,7 @@ class GalerieController
         $gDescripttion = null;
         $gallerieRepository = new GallerieRepository();
         if(isset($_SESSION['uid'])) {
+
             if(isset($id)) {
                 $daten = $gallerieRepository->readById($id);
                 $gName = $daten->gname;

@@ -21,17 +21,18 @@ class BildController
                 $bezeichnung = $_POST['bez'];
                 $gid = $_POST['gid'];
                 $bildData = new BildRepository();
-                if(!empty($bname) || !empty($bezeichnung) || !empty($gid)) {
-                    //if($bildData->checkBildName($gid,$bname) < 1) {
+                if(!empty($bname) && !empty($bezeichnung) && !empty($gid) && !empty($_FILES['pic'])) {
+                    if($bildData->checkBildName($gid,$bname) < 1) {
                         // TODO kontrollieren ob die Gallerie Exiziert!
+
                         $galData = new GallerieRepository();
                         $gName = $galData->readById($gid)->gname;
                         $bname = $bildData->upload('pic',$_SESSION['uid'],$gName,$bname);
                         $bildData->addBild( $bname,$bezeichnung, $gid);
                         header("Location: " . $GLOBALS['appurl'] . "/galerie/show/" . $gid);
-                    /*}else {
+                    }else {
                         $wrong = "Dieser Bild name exsistiert schon in dieser Gallerie";
-                    }*/
+                    }
                 }else {
                     $wrong = "Alle Felder müssen ausgefüllt werden!";
                 }

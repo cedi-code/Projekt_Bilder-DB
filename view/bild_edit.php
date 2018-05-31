@@ -16,13 +16,14 @@ $button = new ButtonBuilder();
 echo $form->input()->label('Bild Name:')->name('name')->type('text')->lblClass($lblClass)->eltClass($eltClass);
 echo $form->input()->label('Bezeichnung')->name('bez')->type('text')->lblClass($lblClass)->eltClass($eltClass);
 echo $form->input()->label('Bild:')->name('pic')->type('file')->lblClass($lblClass)->eltClass($eltClass);
+echo $form->select()->label('Public')->name('isPublic');
 
 if($gid == 0) {
     echo $form->input()->label('Gallerie')->name('gid')->type('text')->lblClass($lblClass)->eltClass($eltClass);
 }else {
     echo $form->input()->name('gid')->type('hidden')->value($gid);
 }
-// echo $form->select()->label('Public')->name('isPublic')
+
 echo $button->start($lblClass, $eltClass);
 echo $button->label('Add')->name('sendBild')->type('submit')->class('btn-success');
 echo $button->end();

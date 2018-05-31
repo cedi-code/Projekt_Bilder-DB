@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS `BILD` (
     bname varchar(30),
     bezeichnung TEXT,
     gid int,
+    isPublic boolean,
     FOREIGN KEY (gid) REFERENCES `GALERIE`(id) ON DELETE CASCADE
 
 );

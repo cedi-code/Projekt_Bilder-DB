@@ -19,8 +19,8 @@
       $result  = "<div class='form-group'>\n";
       $result .= "<label class='{$this->lblClass} control-label' for='textinput'>{$this->label}</label>\n";
       $result .= "<div class='{$this->eltClass}'>\n";
-	  $result .= "<select name='{$this->name}' class='form-control'>\n";
-	  $result .= "<option value='NULL'></option>\n";
+	  $result .= "<input type='checkbox' name='{$this->name}' class='form-control'>\n";
+
       return $result;
     }
     public function end() {

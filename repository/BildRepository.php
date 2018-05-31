@@ -50,14 +50,14 @@ class BildRepository extends Repository
     }
 
     public function checkBildName($gid,$bname) {
+        $name = $bname . ".JPG";
         $query = "SELECT * FROM $this->tableName WHERE gid = ? AND bname = ?";
         $statement = ConnectionHandler::getConnection()->prepare($query);
-        $statement->bind_param("is", $gid, $bname);
-
-        $result = $statement->get_result();
-        if (!$result) {
+        $statement->bind_param("is", $gid, $name);
+        if(!$statement->execute()) {
             throw new Exception($statement->error);
         }
+        $result = $statement->get_result();
         $rows = $result->num_rows;
         $statement->close();
         return $rows;
