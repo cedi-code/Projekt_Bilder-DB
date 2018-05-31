@@ -19,7 +19,7 @@ if(isset($gid)) {
 $button = new ButtonBuilder();
 echo $form->input()->label('Galerie Name:')->name('name')->type('text')->lblClass($lblClass)->eltClass($eltClass)->value($name);
 echo $form->input()->label('Beschreibung')->name('description')->type('text')->lblClass($lblClass)->eltClass($eltClass)->value($descripttion);
-// echo $form->select()->label('Public')->name('isPublic')
+echo $form->select()->label('Public')->name('isPublic');
 
 
 echo $button->start($lblClass, $eltClass);

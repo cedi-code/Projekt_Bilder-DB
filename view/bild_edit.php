@@ -16,7 +16,6 @@ $button = new ButtonBuilder();
 echo $form->input()->label('Bild Name:')->name('name')->type('text')->lblClass($lblClass)->eltClass($eltClass);
 echo $form->input()->label('Bezeichnung')->name('bez')->type('text')->lblClass($lblClass)->eltClass($eltClass);
 echo $form->input()->label('Bild:')->name('pic')->type('file')->lblClass($lblClass)->eltClass($eltClass);
-echo $form->select()->label('Public')->name('isPublic');
 
 if($gid == 0) {
     echo $form->input()->label('Gallerie')->name('gid')->type('text')->lblClass($lblClass)->eltClass($eltClass);
