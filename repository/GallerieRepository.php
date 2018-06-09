@@ -10,14 +10,14 @@ class GallerieRepository extends Repository
 {
     protected $tableName = 'galerie';
     protected $tableId = 'id';
-    protected $order = 'gname,  path, beschreibung, uid';
+    protected $order = 'gname,  path, beschreibung, uid, isPublic';
 
-    public function addGallerie( $name,$beschreibung, $uid,$path) {
+    public function addGallerie( $name,$beschreibung, $uid,$path,$isPublic) {
 
-        $query = "INSERT INTO $this->tableName ( gname,  path, beschreibung, uid) VALUES (?,?,?,?)";
+        $query = "INSERT INTO $this->tableName ( gname,  path, beschreibung, uid, isPublic) VALUES (?,?,?,?,?)";
         $statement = ConnectionHandler::getConnection()->prepare($query);
 
-        $statement->bind_param("sssi",$name,$path,$beschreibung, $uid);
+        $statement->bind_param("sssii",$name,$path,$beschreibung, $uid,$isPublic);
 
         if(!$statement->execute()) {
             throw new Exception($statement->error);
@@ -26,16 +26,17 @@ class GallerieRepository extends Repository
         $statement->close();
     }
 
-    public function updateGallerie($id, $newName, $newBeschreibung ) {
-        $query = "UPDATE $this->tableName SET gname= ?, beschreibung= ? WHERE id = " .$id;
+    public function updateGallerie($id, $newName, $newBeschreibung , $isPublic) {
+        $query = "UPDATE $this->tableName SET gname= ?, beschreibung= ?, isPublic= ? WHERE id = " .$id;
         $statement = ConnectionHandler::getConnection()->prepare($query);
-        $statement->bind_param("ss",$newName,$newBeschreibung);
+        $statement->bind_param("ssi",$newName,$newBeschreibung,$isPublic);
         if(!$statement->execute()) {
             throw new Exception($statement->error);
         }
 
         $statement->close();
     }
+
 
 
 
@@ -79,7 +80,25 @@ public function checkName($name, $uid) {
         return $rows;
     }
 
+    public function getPublicGalleries() {
+        $query = "SELECT * FROM $this->tableName WHERE isPublic = 1";
+        $statement = ConnectionHandler::getConnection()->prepare($query);
 
+        $statement->execute();
+
+        $result = $statement->get_result();
+        if (!$result) {
+            throw new Exception($statement->error);
+        }
+        $rows = [];
+        while($row = $result->fetch_object()){
+            array_push($rows,$row);
+        }
+
+        $statement->close();
+        return $rows;
+
+    }
 
 
 

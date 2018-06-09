@@ -11,15 +11,21 @@
     {
       $this->addProperty('label');
       $this->addProperty('name');
+      $this->addProperty('value');
       $this->addProperty('lblClass');
       $this->addProperty('eltClass');
     }
     public function build()
     {
-      $result  = "<div class='form-group'>\n";
-      $result .= "<label class='{$this->lblClass} control-label' for='textinput'>{$this->label}</label>\n";
-      $result .= "<div class='{$this->eltClass}'>\n";
-	  $result .= "<input type='checkbox' name='{$this->name}' class='form-control'>\n";
+
+      $result = "<label class='{$this->lblClass} control-label' for='textinput'>{$this->label}</label>\n";
+      if($this->value >= 1)  {
+          $result .= "<input type='checkbox' checked name='{$this->name}' value='{$this->value}'>\n";
+      }else {
+          $result .= "<input type='checkbox' name='{$this->name}'>\n";
+      }
+
+
 
       return $result;
     }
