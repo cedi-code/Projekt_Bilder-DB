@@ -20,8 +20,9 @@ $button = new ButtonBuilder();
 echo $form->input()->label('Galerie Name:')->name('name')->type('text')->lblClass($lblClass)->eltClass($eltClass)->value($name);
 echo $form->input()->label('Beschreibung')->name('description')->type('text')->lblClass($lblClass)->eltClass($eltClass)->value($descripttion);
 echo $form->select()->label('Public')->name('isPublic')->value($public)->lblClass($lblClass)->eltClass($eltClass);
-
+echo "<br><br>";
 echo $button->start($lblClass, $eltClass);
+
 echo $button->label('submit')->name('sendGalerie')->type('submit')->class('btn-success');
 echo $button->end();
 echo $form->end();

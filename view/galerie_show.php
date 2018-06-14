@@ -27,7 +27,9 @@ if(isset($_SESSION['uid'])) {
 
 }
 for($i = 0; $i < sizeof($bilder);$i++){
+
     echo "<a href='". $GLOBALS['appurl'] . "/" . $path . "/" . $bilder[$i]->bname . "' >";
+    echo "<div class='imgBox'>";
     echo "<img src='". $GLOBALS['appurl'] . "/" . $path . "/Thumbnail-" . $bilder[$i]->bname . "'/>";
     echo "<h4>" . $bilder[$i]->bezeichnung . "</h4>";
     echo "</a>";

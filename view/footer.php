@@ -1,4 +1,6 @@
-      <hr>
+<br/><br/><br/><br/>
+<hr>
+
       <footer>
         <p>&copy; Copyright gibb</p>
       </footer>
