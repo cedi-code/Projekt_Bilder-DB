@@ -26,6 +26,9 @@ require_once '../repository/LoginRepository.php';
                     if($uid !== null) {
                         $_SESSION['uid'] = $uid;
                         $_SESSION['uname'] = $loginRepository->readById($uid)->nickname;
+                        if($loginRepository->readById($uid)->nickname === "admin") {
+                            $_SESSION['admin'] = true;
+                        }
                         header("Location: ". $GLOBALS['appurl'] . " /benutzer");
                     }else {
                         $erros = $this->errMsg("vpasswort"); // mail gibt es schon oder ist ungültig

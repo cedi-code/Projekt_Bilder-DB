@@ -12,11 +12,28 @@ class BenutzerController
 {
     public function index() {
         if(isset($_SESSION['uid'])) {
-            $gallerieRepository = new GallerieRepository();
-            $view = new View('user_index');
-            $view->title = 'Bilder-DB';
+                $gallerieRepository = new GallerieRepository();
+                $view = new View('user_index');
+                $view->title = 'Bilder-DB';
+                $view->heading = $_SESSION['uname'];
+                $view->galleries = $gallerieRepository->getGalleries($_SESSION['uid']);
+                $view->display();
+
+
+        }else {
+            header("Location: " . $GLOBALS['appurl'] ."/login");
+        }
+
+
+    }
+    public function showAdmin() {
+        if(isset($_SESSION['admin'])) {
+            $ben = new BenutzerRepository();
+
+            $view = new View('admin_index');
+            $view->title = 'Admin';
             $view->heading = $_SESSION['uname'];
-            $view->galleries = $gallerieRepository->getGalleries($_SESSION['uid']);
+            $view->benutzer = $ben->readAll();
             $view->display();
         }else {
             header("Location: " . $GLOBALS['appurl'] ."/login");
@@ -24,7 +41,12 @@ class BenutzerController
 
 
     }
+    public function gotoUser($uid) {
+        $_SESSION['uid'] = $uid;
+        $this->index();
 
+
+    }
     public function doEdit()
     {
 

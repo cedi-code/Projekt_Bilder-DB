@@ -31,6 +31,9 @@
 			<!-- fix schf -->
 
               <?php if(isset($_SESSION['uid'])) {
+                  if(isset($_SESSION['admin'])) {
+                      echo "<li><a href=\"" . $GLOBALS['appurl'] ."/benutzer/showAdmin\"></a></li>";
+                  }
                   echo "<li><a href=\"" . $GLOBALS['appurl'] ."/benutzer\">" .$_SESSION['uname'] . "</a></li>";
                   echo "<li><a href=\"" . $GLOBALS['appurl'] ."/login/logout\">Logout</a></li>";
               }else {
