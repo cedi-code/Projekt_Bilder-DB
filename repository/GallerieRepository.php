@@ -101,7 +101,4 @@ public function checkName($name, $uid) {
     }
 
 
-
-
-
 }

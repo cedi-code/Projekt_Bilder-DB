@@ -9,21 +9,24 @@
     <!-- Custom styles for this template -->
     <link href="<?=$GLOBALS['appurl']?>/css/style.css" rel="stylesheet">
 	<script src="<?=$GLOBALS['appurl']?>/js/jscript.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <title><?= $title ?></title>
   </head>
   <body>
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
         <div class="navbar-header text-center">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse" >
             <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
+            <span class="icon-bar">
+            </span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
           <a class="navbar-brand" href="<?=$GLOBALS['appurl']?>">Bilder-DB</a>
         </div>
-        <div id="navbar" class="collapse navbar-collapse">
+        <div id="MyNavbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
 			<!-- fix schf -->
 

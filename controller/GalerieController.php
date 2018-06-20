@@ -25,8 +25,8 @@ class GalerieController
                 $public = $daten->isPublic;
             }
             if(isset($_POST['sendGalerie'])) {
-                $gName = $_POST['name'];
-                $gDescripttion = $_POST['description'];
+                $gName = htmlspecialchars($_POST['name'], ENT_QUOTES, 'UTF-8');
+                $gDescripttion = htmlspecialchars($_POST['description'], ENT_QUOTES, 'UTF-8');
                 $public = $_POST['isPublic'];
 
                 if(!empty($public)) {
@@ -108,6 +108,8 @@ class GalerieController
     }
     public function delete($id) {
         $gal = new GallerieRepository();
+        $delete = $gal->readById($id)->path;
+        $this->rrmdir($delete);
         $gal->deleteById($id);
         header("Location: " . $GLOBALS['appurl'] ."/benutzer");
     }
@@ -118,6 +120,20 @@ class GalerieController
             mkdir($path, 0777, true);
         }
         return $path;
+    }
+    public function rrmdir($dir) {
+        if (is_dir($dir)) {
+            $objects = scandir($dir);
+            foreach ($objects as $object) {
+                if ($object != "." && $object != "..") {
+                    if (is_dir($dir."/".$object))
+                        $this->rrmdir($dir."/".$object);
+                    else
+                        unlink($dir."/".$object);
+                }
+            }
+            rmdir($dir);
+        }
     }
 
 

@@ -16,10 +16,10 @@ require_once '../repository/LoginRepository.php';
         $loginRepository = new LoginRepository();
 
         if(isset($_POST['send'])) {
-            $email = $_POST['email'];
-            $pw = $_POST['passwort'];
+            $email = htmlspecialchars($_POST['email'], ENT_QUOTES, 'UTF-8');
+            $pw = htmlspecialchars($_POST['passwort'], ENT_QUOTES, 'UTF-8');
             if(empty($email) || empty($pw)){
-                $erros = $loginRepository->errMsg("empty");
+                $erros = $this->errMsg("empty");
             }else {
                 if($loginRepository->checkMail($email)){
                     $uid = $loginRepository->checkPW($email,$pw);
@@ -28,10 +28,10 @@ require_once '../repository/LoginRepository.php';
                         $_SESSION['uname'] = $loginRepository->readById($uid)->nickname;
                         header("Location: ". $GLOBALS['appurl'] . " /benutzer");
                     }else {
-                        $erros = $loginRepository->errMsg("vpasswort"); // mail gibt es schon oder ist ungültig
+                        $erros = $this->errMsg("vpasswort"); // mail gibt es schon oder ist ungültig
                     }
                 }else {
-                    $erros = $loginRepository->errMsg("vmail"); // mail gibt es schon oder ist ungültig
+                    $erros = $this->errMsg("vmail"); // mail gibt es schon oder ist ungültig
                 }
             }
         }
@@ -57,35 +57,33 @@ require_once '../repository/LoginRepository.php';
         $nickname = null;
         $piss =  '/Projekt_Bilder-DB/public'; // $GLOBALS['appurl'];
         if(isset($_POST['sendR'])) {
-            $nickname = $_POST['nickname'];
-            $email = $_POST['email'];
-            $passwort = $_POST['passwort'];
-            $v_passwort = $_POST['v_passwort'];
+            $nickname = htmlspecialchars($_POST['nickname'], ENT_QUOTES, 'UTF-8');
+            $email = htmlspecialchars($_POST['email'], ENT_QUOTES, 'UTF-8');
+            $passwort = htmlspecialchars($_POST['passwort'], ENT_QUOTES, 'UTF-8');
+            $v_passwort = htmlspecialchars($_POST['v_passwort'], ENT_QUOTES, 'UTF-8');
             if(empty($nickname) || empty($email) || empty($passwort) || empty($v_passwort)) {
-                $errorMsg = $loginRepository->errMsg("empty");
-
-
+                $errorMsg = $this->errMsg("empty");
             }else {
                 if(strlen($nickname) < 50 || strlen($nickname) > 3) {
                     if(!$loginRepository->checkMail($email) > 0 && filter_var($email, FILTER_VALIDATE_EMAIL)) {
                         if(preg_match($passwortPattern, $passwort) === 1){
                             if($passwort == $v_passwort) {
                                 $loginRepository->addUser($nickname,$email,$passwort);
-                                $_SESSION["succMsg"] = $loginRepository->errMsg("succ");
+                                $_SESSION["succMsg"] = $this->errMsg("succ");
                                 header("Location: ". $GLOBALS['appurl'] ."/login");
                             }else {
-                                $errorMsg = $loginRepository->errMsg("vpasswort"); // nicht gleiches Passwort
+                                $errorMsg = $this->errMsg("vpasswort"); // nicht gleiches Passwort
                             }
                         }else {
-                            $errorMsg = $loginRepository->errMsg("bpasswort"); // schlechtes Passwort mind. 1Kleinbuchstaben, 1Grossbuchstaben, 1Zahl, 1Sonderzeichen und 5lang sein
+                            $errorMsg = $this->errMsg("bpasswort"); // schlechtes Passwort mind. 1Kleinbuchstaben, 1Grossbuchstaben, 1Zahl, 1Sonderzeichen und 5lang sein
                         }
 
                     }else {
-                        $errorMsg = $loginRepository->errMsg("mailInvalid"); // mail gibt es schon oder ist ungültig
+                        $errorMsg = $this->errMsg("mailInvalid"); // mail gibt es schon oder ist ungültig
                     }
 
                 }else {
-                    $errorMsg = $loginRepository->errMsg("usrname"); // username ungültig (zu lang oder zu kurz)
+                    $errorMsg = $this->errMsg("usrname"); // username ungültig (zu lang oder zu kurz)
                 }
             }
 
@@ -109,86 +107,30 @@ require_once '../repository/LoginRepository.php';
         session_destroy();
         header("Location: " . $GLOBALS['appurl'] ."/");
     }
+      public function errMsg($type) {
+          switch ($type) {
+              case "empty":
+                  return "<p class='errMsg'>Some Textboxes are empty!</p>";
+              case "usrname":
+                  return "<p class='errMsg'>username is invalid (min 3char)</p>";
+              case "mailInvalid":
+                  return "<p class='errMsg'>Mail already exists or is invalid</p>";
+              case "vmail":
+                  return "<p class='errMsg'>Email doesn't match!</p>";
+              case "bpasswort":
+                  return "<p class='errMsg'>Password needs mind 1lowercase, 1uppercase, 1number and 1additional character!</p>";
+              case "vpasswort":
+                  return "<p class='errMsg'>Password doesn't match!</p>";
+              case "succ":
+                  return "<p class='succMsg'>Registration successful</p>";
+              default:
+                  return null;
 
-    public function  checkLogin() {
-        $erros = null;
-        $loginRepository = new LoginRepository();
-        if(isset($_POST['send'])) {
-            $email = $_POST['email'];
-            $pw = $_POST['passwort'];
-            if(empty($email) || empty($pw)){
-                $_SESSION['errorM'] = $loginRepository->errMsg("empty");
-                header("Location: ". $GLOBALS['appurl'] ."/login");
-            }else {
-                if($loginRepository->checkMail($email)){
-                    if($loginRepository->checkPW($email,$pw)) {
-                        echo "Login Zucc";
-                    }else {
-                        $erros = $loginRepository->errMsg("vpasswort"); // mail gibt es schon oder ist ungültig
-                    }
-                }else {
-                    $erros = $loginRepository->errMsg("vmail"); // mail gibt es schon oder ist ungültig
-                }
-            }
-        }
-        $view = new View('login_index');
-        $view->title = 'Bilder-DB';
-        $view->heading = 'Login';
-        $view->display();
+          }
 
-    }
-    public function checkRegistration() {
-        @session_start();
-        $loginRepository = new LoginRepository();
-        $passwortPattern = "((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%èüÜÈéöÖÉÄÀäà_\-?!'`^~\]\[£{}+*.°ç&()¢=]).{4,40})";
-        $piss =  '/Projekt_Bilder-DB/public'; // $GLOBALS['appurl'];
-        $email = null;
-        $passwort = null;
-        if(isset($_POST['sendR'])) {
-            $nickname = $_POST['nickname'];
-            $email = $_POST['email'];
-            $passwort = $_POST['passwort'];
-            $v_passwort = $_POST['v_passwort'];
-
-            if(empty($nickname) || empty($email) || empty($passwort) || empty($v_passwort)) {
-                $_SESSION['errorM'] = $loginRepository->errMsg("empty");
-                header("Location: ". $GLOBALS['appurl'] ."/login/registration");
-
-            }else {
-                if(strlen($nickname) < 50 || strlen($nickname) > 3) {
-                    if(!$loginRepository->checkMail($email) > 0 && filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                        if(preg_match($passwortPattern, $passwort) === 1){
-                            if($passwort == $v_passwort) {
-                                $loginRepository->addUser($nickname,$email,$passwort);
-                                $_SESSION["succMsg"] = $loginRepository->errMsg("succ");
-                                $this->index();
-                            }else {
-                                $_SESSION['errorM'] = $loginRepository->errMsg("vpasswort"); // nicht gleiches Passwort
-                                header("Location: /Projekt_Bilder-DB/public/login/registration");
-                            }
-                        }else {
-                            $_SESSION['errorM'] = $loginRepository->errMsg("bpasswort"); // schlechtes Passwort mind. 1Kleinbuchstaben, 1Grossbuchstaben, 1Zahl, 1Sonderzeichen und 5lang sein
-                            header("Location: ". $GLOBALS['appurl'] ."/login/registration");
-                        }
-
-                    }else {
-                        $_SESSION['errorM'] = $loginRepository->errMsg("mailInvalid"); // mail gibt es schon oder ist ungültig
-                        header("Location: ". $GLOBALS['appurl'] ."/login/registration");
-                    }
-
-                }else {
-                    $_SESSION['errorM'] = $loginRepository->errMsg("usrname"); // username ungültig (zu lang oder zu kurz)
-                    header("Location: ". $GLOBALS['appurl'] ."/login/registration");
-                }
-            }
+      }
 
 
 
-        }else {
-            $_SESSION['errorM'] = $loginRepository->errMsg("empty");
-            header("Location: ". $GLOBALS['appurl'] ."/login/registration");
-        }
-
-    }
 }
 ?>

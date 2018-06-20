@@ -8,6 +8,7 @@ require_once '../lib/Repository.php';
 class BenutzerRepository extends Repository
 {
   protected $tableName = 'user';
+    protected $tableId = 'id';
 
   public function updateUser( $nickname,$email) {
 

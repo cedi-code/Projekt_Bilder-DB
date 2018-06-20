@@ -63,79 +63,35 @@ class BildRepository extends Repository
         return $rows;
 
     }
-    function upload($name,$uid,$gallerieName,$bname) {
-        $File = $_FILES[$name];
-
-        $FileName = $_FILES[$name]['name'];
-        $FileTmpName = $_FILES[$name]['tmp_name'];
-        $FileSize = $_FILES[$name]['size'];
-        $FileError = $_FILES[$name]['error'];
-        $FileType = $_FILES[$name]['type'];
-
-
-        $FileExt = explode('.', $FileName);
-        $FileActualExt = strtolower(end($FileExt));
-
-        if($FileActualExt === 'png' || $FileActualExt === 'jpg') {
-            if($FileError === 0) {
-                if($FileSize < 4000000) {
-                    if($name == 'galleriePic') {
-                        $FileUper = strtoupper($FileActualExt);
-                        $fileName = 'profile.'.$FileUper;
-                    }else {
-                        // Hier wird der Name gemacht der Datei (timestamp)
-                        $FileUper = strtoupper($FileActualExt);
-                        $date = new DateTime();
-                        $timestamp = $date->getTimestamp();
-                        // $fileName =  $timestamp . '.' . $FileUper;
-                        $fileName = $bname . '.' . $FileUper;
-
-                    }
-
-                    $fileDestination = $uid.'/'.$gallerieName.'/'.$fileName;
-                    $fileDestinationPath = $uid.'/'.$gallerieName.'/';
-                    if(move_uploaded_file($FileTmpName, $fileDestination)) {
-                        $this->genThumb($fileDestination,$fileDestinationPath,$fileName,$FileActualExt);
-                    }
-                    return $fileName;
-                }else {
-                    echo "<pre>";
-
-                    echo 'size';
-                    var_dump($_FILES[$name]);die;
-                }
-            }else {
-                echo "<pre>";
-                echo 'err';
-                var_dump($_FILES[$name]);die;
-            }
-        }else {
-            echo "<pre>";
-
-            echo 'type';
-            var_dump($_FILES[$name]);die;
+    public function updateImage($id, $newName, $newBeschreibung ) {
+        $query = "UPDATE $this->tableName SET bname= ?, bezeichnung= ? WHERE id = " .$id;
+        $statement = ConnectionHandler::getConnection()->prepare($query);
+        $statement->bind_param("ss",$newName,$newBeschreibung);
+        if(!$statement->execute()) {
+            throw new Exception($statement->error);
         }
 
+        $statement->close();
     }
-    function genThumb($fileDestination,$path,$fileName,$FileActualExt) {
-        list($width, $height) = getimagesize($fileDestination);
-        $r = $width / $height;
-        $factor = $width / $height;
-        $newheight = 150;
-        $newwidth = 150 * $factor;
-        if($FileActualExt == "png"){
-            $src = imagecreatefrompng($fileDestination);
-            $dst = imagecreatetruecolor($newwidth, $newheight);
-            imagecopyresampled($dst, $src, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
 
-            imagepng($dst, $path . "Thumbnail-" . $fileName);
-        }else{
-            $src = imagecreatefromjpeg($fileDestination);
-            $dst = imagecreatetruecolor($newwidth, $newheight);
-            imagecopyresampled($dst, $src, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
+    public function getRandomBildName($gallid) {
+        $query = "SELECT bname FROM $this->tableName WHERE gid = $gallid
+                          ORDER BY RAND()
+                          LIMIT 1";
+        $statement = ConnectionHandler::getConnection()->prepare($query);
+        $statement->execute();
 
-            imagejpeg($dst, $path . "Thumbnail-" . $fileName);
+        $result = $statement->get_result();
+        if (!$result) {
+            throw new Exception($statement->error);
         }
+        if($result->num_rows > 0) {
+            return "Thumbnail-" .$result->fetch_object()->bname;
+        }else {
+            return "../../default.svg";
+        }
+
+
     }
 
 }
